@@ -1,10 +1,13 @@
 "use client";
 import useAuth from "@/hook/useAuth";
-import { getLocalData } from "@/lib/getData";
-import { addOfflineDataMany } from "@/utils/offlineSlice";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { getLocalData } from "@/lib/getData";
+import { addOfflineDataMany } from "@/utils/offlineSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { isOnline } from "@/utils/networkCheck";
+import toast from "react-hot-toast";
 
 const getCustomersData = async () => {
   try {
@@ -25,8 +28,99 @@ const getCustomersData = async () => {
 export default function Home() {
   const [user] = useAuth();
   const [customers, setCustomers] = useState([]);
-  const offlineData = useSelector((state) => state.offline.offlineData);
   const dispatch = useDispatch();
+  const offlineData = useSelector((state) => state.offline.offlineData);
+
+  // Get Customers Data
+
+  useEffect(() => {
+    if (user) {
+      async function fetchData() {
+        const customerData = await getCustomersData();
+        setCustomers(customerData);
+      }
+      fetchData();
+    }
+  }, [user]);
+
+  // Handle Delete Customer
+
+  const handleDeleteCustomer = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`http://localhost:3000/api/customers/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.deleteCount > 0) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+              setCustomers((prevCustomers) =>
+                prevCustomers.filter((customer) => customer._id !== id)
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting item:", error);
+          });
+      }
+    });
+  };
+
+  // Handle Delete All Customer
+
+  const handleDeleteAllCustomer = async () => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
+        const response = await fetch(`http://localhost:3000/api/customers`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete customer addresses");
+        }
+
+        Swal.fire({
+          title: "Deleted!",
+          text: "All customer addresses have been deleted.",
+          icon: "success",
+        });
+
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error deleting customer addresses:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to delete customer addresses.",
+        icon: "error",
+      });
+    }
+  };
+
+  // Get Data From localStorage and set offline store
 
   useEffect(() => {
     const data = getLocalData();
@@ -34,18 +128,33 @@ export default function Home() {
       dispatch(addOfflineDataMany(data));
     }
   }, [dispatch]);
+  // console.log(offlineData);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     async function fetchData() {
-  //       const customerData = await getCustomersData();
-  //       setCustomers(customerData);
-  //     }
-  //     fetchData();
-  //   }
-  // }, [user]);
-  
-  console.log(offlineData);
+  // Checking the network if isOnline call api
+
+  if (isOnline() && localStorage.length > 0) {
+    fetch("http://localhost:3000/api/customers", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(offlineData),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to save address");
+        }
+        return res.json();
+      })
+      .then(() => {
+        toast.success("Successfully saved your address");
+        localStorage.clear();
+        router.push("/");
+      })
+      .catch(() => {
+        toast.error("Failed to save your address");
+      });
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 font">
@@ -53,15 +162,23 @@ export default function Home() {
         <div>
           Hey <span className="font-semibold">{user?.displayName}</span>, You
           have {customers.length} customers.
-          <div className="mt-10">
-            {offlineData.map((customer, i) => (
+          <div className="mt-8">
+            {customers.length > 0 && (
+              <p
+                className=" text-right mb-2 cursor-pointer"
+                onClick={handleDeleteAllCustomer}
+              >
+                Delete All
+              </p>
+            )}
+            {customers.map((customer, i) => (
               <div
                 key={i}
                 className="border border-gray-200 rounded-md p-4 mb-6 shadow-md"
               >
                 <p className=" text-slate-600 flex justify-between">
                   {customer.name}{" "}
-                  <span>
+                  <span onClick={() => handleDeleteCustomer(customer._id)}>
                     <X opacity={10} className="cursor-pointer" size={20} />
                   </span>
                 </p>

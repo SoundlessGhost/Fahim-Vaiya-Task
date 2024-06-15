@@ -9,7 +9,8 @@ const offlineSlice = createSlice({
   initialState,
   reducers: {
     addOfflineData: (state, action) => {
-      const existItems = JSON.parse(localStorage.getItem("customer_address")) || [];
+      const existItems =
+        JSON.parse(localStorage.getItem("customer_address")) || [];
       localStorage.setItem(
         "customer_address",
         JSON.stringify([...existItems, action.payload])

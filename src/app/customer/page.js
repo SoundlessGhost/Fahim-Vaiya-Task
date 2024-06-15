@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { apiCall } from "@/utils/api";
 import { addOfflineData } from "@/utils/offlineSlice";
 import { isOnline } from "@/utils/networkCheck";
@@ -17,6 +17,8 @@ const CustomerPage = () => {
   const [user] = useAuth();
   const dispatch = useDispatch();
 
+  // Callback Url
+
   useEffect(() => {
     if (!user) {
       const callbackUrl = encodeURIComponent(window.location.pathname);
@@ -24,12 +26,16 @@ const CustomerPage = () => {
     }
   }, [user, router]);
 
+  // Get Data For Form Use React Hook Form
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+
+  // Handle OnSubmit Button
 
   const onSubmit = (data) => {
     const { name, number, email, area } = data;
@@ -40,7 +46,9 @@ const CustomerPage = () => {
       email,
       area,
     };
-    
+
+    // Checking the network
+
     if (isOnline()) {
       apiCall(customerInformation)
         .then(() => {
@@ -58,28 +66,6 @@ const CustomerPage = () => {
       );
       reset();
     }
-
-    // fetch("http://localhost:3000/api/customers", {
-    //   method: "POST",
-    //   headers: {
-    //     "content-type": "application/json",
-    //   },
-    //   body: JSON.stringify(CustomerInformation),
-    // })
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw new Error("Failed to save address");
-    //     }
-    //     toast("saved")
-    //     return res.json();
-    //   })
-    //   .then(() => {
-    //     toast.success("Successfully saved your address");
-    //     router.push("/");
-    //   })
-    //   .catch(() => {
-    //     toast.error("Failed to save your address");
-    //   });
   };
 
   if (!user) {

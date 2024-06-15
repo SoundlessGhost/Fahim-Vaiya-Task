@@ -22,12 +22,35 @@ export async function POST(request) {
     await ConnectDB();
     const body = await request.json();
 
-    const NewAddress = await CustomerAddress.create(body);
-    return NextResponse.json(NewAddress, { status: 201 });
+    if (Array.isArray(body)) {
+      const NewAddresses = await CustomerAddress.insertMany(body);
+      return NextResponse.json(NewAddresses, { status: 201 });
+    } else {
+      const newAddress = await CustomerAddress.create(body);
+      return NextResponse.json(newAddress, { status: 201 });
+    }
   } catch (error) {
-    console.error("Failed to create customer address:", error);
+    console.error("Failed to create customer addresses:", error);
     return NextResponse.json(
-      { message: "Something Went Wrong Failed to Created New Address" },
+      { message: "Something went wrong. Failed to create new addresses." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE() {
+  try {
+    await ConnectDB();
+    await CustomerAddress.deleteMany({});
+
+    return NextResponse.json(
+      { message: "All customer addresses have been deleted." },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Failed to delete customer addresses:", error);
+    return NextResponse.json(
+      { message: "Something went wrong. Failed to delete customer addresses." },
       { status: 500 }
     );
   }
