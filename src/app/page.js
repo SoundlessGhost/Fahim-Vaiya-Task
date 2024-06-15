@@ -1,8 +1,10 @@
 "use client";
 import useAuth from "@/hook/useAuth";
+import { getLocalData } from "@/lib/getData";
+import { addOfflineDataMany } from "@/utils/offlineSlice";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const getCustomersData = async () => {
   try {
@@ -24,17 +26,26 @@ export default function Home() {
   const [user] = useAuth();
   const [customers, setCustomers] = useState([]);
   const offlineData = useSelector((state) => state.offline.offlineData);
-  console.log(offlineData);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user) {
-      async function fetchData() {
-        const customerData = await getCustomersData();
-        setCustomers(customerData);
-      }
-      fetchData();
+    const data = getLocalData();
+    if (data?.length > 0) {
+      dispatch(addOfflineDataMany(data));
     }
-  }, [user]);
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     async function fetchData() {
+  //       const customerData = await getCustomersData();
+  //       setCustomers(customerData);
+  //     }
+  //     fetchData();
+  //   }
+  // }, [user]);
+  
+  console.log(offlineData);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 font">
@@ -43,7 +54,7 @@ export default function Home() {
           Hey <span className="font-semibold">{user?.displayName}</span>, You
           have {customers.length} customers.
           <div className="mt-10">
-            {customers.map((customer, i) => (
+            {offlineData.map((customer, i) => (
               <div
                 key={i}
                 className="border border-gray-200 rounded-md p-4 mb-6 shadow-md"
@@ -54,9 +65,9 @@ export default function Home() {
                     <X opacity={10} className="cursor-pointer" size={20} />
                   </span>
                 </p>
-                <p className="">{customer.area}</p>
-                <p className="">{customer.number}</p>
-                <p className="">{customer.email}</p>
+                <p>{customer.area}</p>
+                <p>{customer.number}</p>
+                <p>{customer.email}</p>
               </div>
             ))}
           </div>

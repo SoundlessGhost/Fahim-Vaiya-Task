@@ -39,10 +39,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 <!-- For Using Redux Rules -->
 
 1. Install react-redux
-2. Want Provider 
+2. Want to Provider wrap hole page
 3. Network Check 
 4. Api Call
-5. Offline Storage when site is offline
+5. Offline Storage when site is offline create store.js file
 6. Show Offline Data When site is online
 
 <!-- For Using Redux Rules -->
+
+
+<!--  -->

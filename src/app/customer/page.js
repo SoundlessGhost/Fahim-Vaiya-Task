@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { apiCall } from "@/utils/api";
-import { addOfflineData } from "@/store/offlineSlice";
+import { addOfflineData } from "@/utils/offlineSlice";
 import { isOnline } from "@/utils/networkCheck";
 
 const CustomerPage = () => {
@@ -40,20 +40,23 @@ const CustomerPage = () => {
       email,
       area,
     };
+    
     if (isOnline()) {
       apiCall(customerInformation)
         .then(() => {
           toast.success("Successfully saved your address");
           router.push("/");
+          reset();
         })
         .catch(() => {
           toast.error("Failed to save your address");
         });
     } else {
       dispatch(addOfflineData(customerInformation));
-      toast("your address is saved offline and will be synced later");
+      toast(
+        "Your address is successfully saved offline store and will be synced later"
+      );
       reset();
-      
     }
 
     // fetch("http://localhost:3000/api/customers", {
@@ -164,6 +167,5 @@ const CustomerPage = () => {
 };
 
 export default CustomerPage;
-
 
 // TODO : when user offline or online save data base and then show site is online
