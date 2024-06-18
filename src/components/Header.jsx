@@ -18,43 +18,50 @@ const Header = () => {
   };
 
   return (
-    <div className="sticky bg-white font z-50 py-2 top-0 inset-x-0 mx-20 border-o border-b">
-      <div className="flex items-center h-16  justify-between">
-        <div className="flex items-center">
-          <div className="flex ">
-            <Link href={"/"} className="mr-4">
-              Home
-            </Link>
-            <Link href={"/customer"} className="mr-4">
-              Customer
-            </Link>
+    <div className=" overflow-hidden">
+      <div className="sticky bg-white font z-50 top-0 mb-4 inset-x-0 lg:mx-20 mx-4 border-o border-b">
+        <div className="flex items-center h-16  justify-between">
+          <div className="flex items-center">
+            <div className="flex ">
+              <Link href={"/"} className="mr-4">
+                Home
+              </Link>
+              <Link href={"/customer"} className="mr-4">
+                Customer
+              </Link>
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center">
-          <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end">
-            {user ? (
-              <div
-                onClick={handleLogOut}
-                className="flex items-center text-sm cursor-pointer"
-              >
-                <LogOut size={14} className="mr-1" />
-                <span>Logout</span>
-              </div>
-            ) : (
-              <div>
-                <Link className="px-2 rounded-lg text-sm" href="/user/login">
-                  Login
-                </Link>
-              </div>
-            )}
+          <div className="flex items-center">
+            <div className="lg:flex lg:flex-1 lg:items-center lg:justify-end">
+              {user ? (
+                <div
+                  onClick={handleLogOut}
+                  className="flex items-center text-sm cursor-pointer"
+                >
+                  <LogOut size={14} className="mr-1" />
+                  <span>Logout</span>
+                </div>
+              ) : (
+                <div>
+                  <Link className="px-2 rounded-lg text-sm" href="/user/login">
+                    Login
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+      {user ? (
+        <Link href={"all-user"} className="mx-10 font hover:text-gray-600">
+          All Xser
+        </Link>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
 
 export default Header;
-
-

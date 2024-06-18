@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { apiCall } from "@/utils/api";
 import { addOfflineData } from "@/utils/offlineSlice";
 import { isOnline } from "@/utils/networkCheck";
@@ -53,7 +53,6 @@ const CustomerPage = () => {
       apiCall(customerInformation)
         .then(() => {
           toast.success("Successfully saved your address");
-          router.push("/");
           reset();
         })
         .catch(() => {
@@ -61,9 +60,7 @@ const CustomerPage = () => {
         });
     } else {
       dispatch(addOfflineData(customerInformation));
-      toast(
-        "Your address is successfully saved offline store and will be synced later"
-      );
+      toast("Your address is successfully offline");
       reset();
     }
   };
@@ -76,11 +73,11 @@ const CustomerPage = () => {
     <div className="flex min-h-screen flex-col items-center justify-between p-16">
       <div className="my-10 font">
         <p className="text-sm mb-6 text-center">
-          Provide Your Permanent Address
+          Provide Customer Permanent Address
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="lg:flex items-center mb-6">
+          <div className="lg:flex items-center lg:mb-6">
             <div>
               <Label>Your Full Name</Label>
               <Input
@@ -153,5 +150,3 @@ const CustomerPage = () => {
 };
 
 export default CustomerPage;
-
-// TODO : when user offline or online save data base and then show site is online

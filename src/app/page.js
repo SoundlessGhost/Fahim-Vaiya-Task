@@ -7,7 +7,6 @@ import { getLocalData } from "@/lib/getData";
 import { addOfflineDataMany } from "@/utils/offlineSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { isOnline } from "@/utils/networkCheck";
-import { useRouter } from "next/navigation";
 
 const getCustomersData = async () => {
   try {
@@ -27,10 +26,9 @@ const getCustomersData = async () => {
 
 export default function Home() {
   const [user] = useAuth();
-  const router = useRouter();
   const [customers, setCustomers] = useState([]);
-  const dispatch = useDispatch();
   const offlineData = useSelector((state) => state.offline.offlineData);
+  const dispatch = useDispatch();
 
   // Get Customers Data
 
@@ -129,6 +127,7 @@ export default function Home() {
       dispatch(addOfflineDataMany(data));
     }
   }, [dispatch]);
+  
   console.log(offlineData);
 
   // Checking the network if isOnline call api
@@ -144,16 +143,8 @@ export default function Home() {
       if (res.status !== 200 && res.status !== 201) {
         throw new Error("Failed to save customer address");
       }
-      // if (!res.ok) {
-      //   throw new Error("Failed to save address");
-      // }
-      // return res.json();
     });
     localStorage.clear();
-    // .then(() => {
-    //   toast.success("Successfully saved your address");
-    //   router.push("/");
-    // });
   }
 
   return (
