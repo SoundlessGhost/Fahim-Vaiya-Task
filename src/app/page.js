@@ -149,11 +149,11 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 font">
+    <main className="flex min-h-screen flex-col items-center justify-between pt-10 font">
       {user ? (
         <div>
           Hey <span className="font-semibold">{user?.displayName}</span>, You
-          have {customers.length} customers.
+          Have {customers.length} Customers.
           <div className="mt-8">
             {customers.length > 0 && (
               <p

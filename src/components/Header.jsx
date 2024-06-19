@@ -20,15 +20,23 @@ const Header = () => {
   };
 
   return (
-    <div className=" overflow-hidden">
-      <div className="sticky font z-50 top-0 mb-4 inset-x-0 lg:mx-20 mx-4 border-o border-b">
+    <div className="sticky top-0">
+      <div className=" font z-50  bg-[#fbfbfb]  mb-4 inset-x-0 lg:px-20 mx-4 border-o border-b">
         <div className="flex items-center h-16  justify-between">
           <div className="flex items-center">
             <div className="flex ">
-              <Link href={"/"} className="mr-4">
+              <Link
+                href={"/"}
+                className={`${pathname === "/" ? "text-red-600" : ""} mr-4`}
+              >
                 Home
               </Link>
-              <Link href={"/customer"} className="mr-4">
+              <Link
+                href={"/customer"}
+                className={`${
+                  pathname === "/customer" ? "text-red-600" : ""
+                } mr-4`}
+              >
                 Customer
               </Link>
             </div>
@@ -42,7 +50,6 @@ const Header = () => {
                   className="flex items-center text-sm cursor-pointer"
                 >
                   <LogOut size={14} className="mr-1" />
-                  <span>Logout</span>
                 </div>
               ) : (
                 <div>
@@ -55,22 +62,25 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {pathname === "/all-user" || pathname === "/customer" ? (
-        ""
-      ) : (
-        <div className="text-center text-[10px]">
-          {user ? (
-            <Link
-              href={"/all-user"}
-              className={`${buttonVariants()} mx-10 font text-[10px] w-40`}
-            >
-              All log users
-            </Link>
-          ) : (
-            ""
-          )}
-        </div>
-      )}
+
+      <div>
+        {pathname === "/all-user" || pathname === "/customer" ? (
+          ""
+        ) : (
+          <div className="text-right text-[10px]">
+            {user ? (
+              <Link
+                href={"/all-user"}
+                className={`${buttonVariants()} mx-10 font text-[10px] w-40`}
+              >
+                All log users
+              </Link>
+            ) : (
+              ""
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

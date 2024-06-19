@@ -61,7 +61,8 @@ const CustomerPage = () => {
     } else {
       dispatch(addOfflineData(customerInformation));
       toast.success("Your address is successfully saved offline");
-      reset();
+      router.push("/");
+      // reset();
     }
   };
 
