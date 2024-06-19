@@ -60,7 +60,7 @@ const CustomerPage = () => {
         });
     } else {
       dispatch(addOfflineData(customerInformation));
-      toast("Your address is successfully saved offline");
+      toast.success("Your address is successfully saved offline");
       reset();
     }
   };

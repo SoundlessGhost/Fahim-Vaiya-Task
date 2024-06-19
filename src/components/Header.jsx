@@ -5,11 +5,13 @@ import { LogOut } from "lucide-react";
 import useAuth from "@/hook/useAuth";
 import { app } from "../../firebase.config";
 import { getAuth, signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { buttonVariants } from "./ui/button";
 const Header = () => {
   const auth = getAuth(app);
   const router = useRouter();
   const [user] = useAuth();
+  const pathname = usePathname();
 
   const handleLogOut = () => {
     signOut(auth).then(() => {
@@ -19,7 +21,7 @@ const Header = () => {
 
   return (
     <div className=" overflow-hidden">
-      <div className="sticky bg-white font z-50 top-0 mb-4 inset-x-0 lg:mx-20 mx-4 border-o border-b">
+      <div className="sticky font z-50 top-0 mb-4 inset-x-0 lg:mx-20 mx-4 border-o border-b">
         <div className="flex items-center h-16  justify-between">
           <div className="flex items-center">
             <div className="flex ">
@@ -53,12 +55,21 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {user ? (
-        <Link href={"all-user"} className="mx-10 font hover:text-gray-600">
-          All Xser
-        </Link>
-      ) : (
+      {pathname === "/all-user" || pathname === "/customer" ? (
         ""
+      ) : (
+        <div className="text-center text-[10px]">
+          {user ? (
+            <Link
+              href={"/all-user"}
+              className={`${buttonVariants()} mx-10 font text-[10px] w-40`}
+            >
+              All log users
+            </Link>
+          ) : (
+            ""
+          )}
+        </div>
       )}
     </div>
   );

@@ -7,6 +7,7 @@ import { getLocalData } from "@/lib/getData";
 import { addOfflineDataMany } from "@/utils/offlineSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { isOnline } from "@/utils/networkCheck";
+import toast from "react-hot-toast";
 
 const getCustomersData = async () => {
   try {
@@ -127,7 +128,7 @@ export default function Home() {
       dispatch(addOfflineDataMany(data));
     }
   }, [dispatch]);
-  
+
   console.log(offlineData);
 
   // Checking the network if isOnline call api
@@ -141,7 +142,7 @@ export default function Home() {
       body: JSON.stringify(offlineData),
     }).then((res) => {
       if (res.status !== 200 && res.status !== 201) {
-        throw new Error("Failed to save customer address");
+        toast.error("Failed to save customer address");
       }
     });
     localStorage.clear();

@@ -41,7 +41,8 @@ const AllUserPage = () => {
     }
   }, [user]);
   return (
-    <div className="lg:m-20 m-4 font">
+    <div className="lg:m-16 m-4 font">
+      <p className="text-center mb-4">This page can only be viewed by admin but for now I have left it like this.</p>
       <Table>
         <TableCaption>A list of recent users.</TableCaption>
         <TableHeader>
