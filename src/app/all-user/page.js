@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 
 const getUsersData = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/users", {
+    const res = await fetch("https://fahim-vaiya-task.vercel.app/api/users", {
       cache: "no-store",
     });
     if (!res.ok) {
