@@ -8,11 +8,10 @@ import { addOfflineDataMany } from "@/utils/offlineSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { isOnline } from "@/utils/networkCheck";
 import toast from "react-hot-toast";
-import Link from "next/link";
 
 const getCustomersData = async () => {
   try {
-    const res = await fetch("https://fahim-vaiya-task.vercel.app/api/customers", {
+    const res = await fetch("http://localhost:3000/api/customers", {
       cache: "no-store",
     });
     if (!res.ok) {
@@ -57,7 +56,7 @@ export default function Home() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://fahim-vaiya-task.vercel.app/api/customers/${id}`, {
+        fetch(`http://localhost:3000/api/customers/${id}`, {
           method: "DELETE",
         })
           .then((res) => res.json())
@@ -95,7 +94,7 @@ export default function Home() {
       });
 
       if (result.isConfirmed) {
-        const response = await fetch(`https://fahim-vaiya-task.vercel.app/api/customers`, {
+        const response = await fetch(`http://localhost:3000/api/customers`, {
           method: "DELETE",
         });
 
@@ -135,7 +134,7 @@ export default function Home() {
   // Checking the network if isOnline call api
 
   if (isOnline() && localStorage.length > 0) {
-    fetch("https://fahim-vaiya-task.vercel.app/api/customers", {
+    fetch("http://localhost:3000/api/customers", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -153,16 +152,6 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between pt-10 font">
       {user ? (
         <div>
-          <div className="text-center">
-            {" "}
-            <Link
-              target="blank"
-              href={"https://fahim-vaiya-task.vercel.app/"}
-              className="font-semibold hover:text-gray-600"
-            >
-              Open live server
-            </Link>
-          </div>
           <p>
             Hey <span className="font-semibold">{user?.displayName}</span>, You
             Have {customers.length} Customers.
