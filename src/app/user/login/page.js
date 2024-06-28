@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { app } from "../../../../firebase.config";
 
 const LoginPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginComponent />
+    </Suspense>
+  );
+};
+
+const LoginComponent = () => {
   const auth = getAuth(app);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,7 +50,6 @@ const LoginPage = () => {
     <div className="container relative flex flex-col pt-20 justify-center items-center lg:px-0">
       <div className="w-full mx-auto flex flex-col justify-center space-y-6 sm:w-[350px] ">
         {/* Image And Text One */}
-
         <div className="flex flex-col items-center ">
           <h1 className="text-2xl font-bold font ">Welcome Back</h1>
           <Link
@@ -56,7 +64,6 @@ const LoginPage = () => {
         </div>
 
         {/* Form */}
-
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
