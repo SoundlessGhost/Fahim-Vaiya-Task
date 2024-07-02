@@ -53,8 +53,13 @@ const Header = () => {
                 </div>
               ) : (
                 <div>
-                  <Link className="px-2 rounded-lg text-sm" href="/user/login">
-                    Login
+                  <Link
+                    className={`${buttonVariants({
+                      variant: "ghost",
+                    })} rounded-lg text-sm border`}
+                    href="/user/login"
+                  >
+                    Get Started
                   </Link>
                 </div>
               )}
